@@ -1,11 +1,25 @@
 #include <stdio.h>
 
+#define MEM_SIZ 30000
+
 ////////////////////////////////////////////////////////////////////////////////
 // Abstraction level -1
 ////////////////////////////////////////////////////////////////////////////////
 
-void bf_interpret(void) {
-    puts("Unimplemented.");
+void bf_interpret(FILE *f) {
+    char mem[MEM_SIZ] = {0};
+    char *ptr = mem;
+
+    for (int c; c != EOF; c = fgetc(f)) {
+        switch (c) {
+            case '>':
+                ptr++;
+                break;
+            case '<':
+                ptr--;
+                break;
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +38,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    bf_interpret();
+    bf_interpret(f);
 
     if (fclose(f) != 0) {
         perror("fclose");
