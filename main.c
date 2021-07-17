@@ -6,7 +6,7 @@
 // Abstraction level -1
 ////////////////////////////////////////////////////////////////////////////////
 
-void bf_interpret(FILE *f) {
+int bf_interpret(FILE *f) {
     char mem[MEM_SIZ] = {0};
     char *ptr = mem;
 
@@ -14,12 +14,22 @@ void bf_interpret(FILE *f) {
         switch (c) {
             case '>':
                 ptr++;
+                if (ptr >= mem + MEM_SIZ) {
+                    return -1;
+                }
+
                 break;
             case '<':
                 ptr--;
+                if (ptr < mem) {
+                    return -1;
+                }
+
                 break;
         }
     }
+
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
