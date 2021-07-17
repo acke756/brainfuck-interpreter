@@ -1,40 +1,4 @@
-#include <stdio.h>
-
-#define MEM_SIZ 30000
-
-////////////////////////////////////////////////////////////////////////////////
-// Abstraction level -1
-////////////////////////////////////////////////////////////////////////////////
-
-int bf_interpret(FILE *f) {
-    char mem[MEM_SIZ] = {0};
-    char *ptr = mem;
-
-    for (int c; c != EOF; c = fgetc(f)) {
-        switch (c) {
-            case '>':
-                ptr++;
-                if (ptr >= mem + MEM_SIZ) {
-                    return -1;
-                }
-
-                break;
-            case '<':
-                ptr--;
-                if (ptr < mem) {
-                    return -1;
-                }
-
-                break;
-        }
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Abstraction level 0
-////////////////////////////////////////////////////////////////////////////////
+#include "bf.h"
 
 int main(int argc, char **argv) {
     if (argc != 2) {
