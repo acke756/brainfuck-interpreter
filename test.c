@@ -16,10 +16,15 @@ bool test_leave_left(void) {
     return bf_interpret("bf/leave_left.bf", 4) != 0;
 }
 
+bool test_leave_right(void) {
+    return bf_interpret("bf/four_right.bf", 4) != 0;
+}
+
 int main(int argc, char **argv) {
     test_t testv[] = {
         {test_sanity, "Sanity check"},
         {test_leave_left, "Error when pointer exits left"},
+        {test_leave_right, "Error when pointer exits right"},
     };
     size_t testc = sizeof(testv) / sizeof(test_t);
 
