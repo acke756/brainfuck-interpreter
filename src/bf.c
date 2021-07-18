@@ -53,7 +53,11 @@ int interpret(bf_context_t *context_p) {
                 break;
             case '[':
                 if (*(context_p->ptr) != 0) {
-                    //TODO: Push this spot to stack
+                    int result = interpret(context_p);
+                    if (result != 0) {
+                        return result;
+                    }
+
                     break;
                 }
 
@@ -66,8 +70,7 @@ int interpret(bf_context_t *context_p) {
                 }
 
                 if (*(context_p->ptr) == 0) {
-                    //TODO: Pop a spot
-                    break;
+                    return 0;
                 }
 
                 //TODO: Return to spot at top of stack
