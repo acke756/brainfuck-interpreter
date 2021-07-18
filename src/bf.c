@@ -24,6 +24,12 @@ int bf_interpret_file(FILE *f, const size_t mem_siz) {
                 }
 
                 break;
+            case '+':
+                (*ptr)++;
+                break;
+            case '-':
+                (*ptr)--;
+                break;
         }
     }
 
