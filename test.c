@@ -39,6 +39,32 @@ bool test_four_falling(void) {
     return memcmp(mem, mem_ref, 4UL) == 0;
 }
 
+bool test_conditional_skip(void) {
+    char mem_ref[4] = {0};
+    char mem[4] = {0};
+
+    bf_interpret("bf/skip.bf", 4, mem);
+
+    return memcmp(mem, mem_ref, 4UL) == 0;
+}
+
+bool test_loop(void) {
+    char mem_ref[] = {3, 2, 1, 0};
+    char mem[4] = {0};
+
+    bf_interpret("bf/loop.bf", 4, mem);
+
+    return memcmp(mem, mem_ref, 4UL) == 0;
+}
+
+bool test_left_bracket(void) {
+    return bf_interpret("bf/left_bracket.bf", 4, NULL) != 0;
+}
+
+bool test_right_bracket(void) {
+    return bf_interpret("bf/right_bracket.bf", 4, NULL) != 0;
+}
+
 int main(int argc, char **argv) {
     test_t testv[] = {
         {test_sanity, "Sanity check"},
@@ -46,6 +72,10 @@ int main(int argc, char **argv) {
         {test_leave_right, "Error when pointer exits right"},
         {test_four_rising, "Four rising numbers"},
         {test_four_falling, "Four falling numbers"},
+        {test_conditional_skip, "Conditional skip"},
+        {test_loop, "Loop"},
+        {test_left_bracket, "Unmatched left bracket"},
+        {test_right_bracket, "Unmatched right bracket"},
     };
     size_t testc = sizeof(testv) / sizeof(test_t);
 
