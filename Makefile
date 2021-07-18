@@ -9,7 +9,7 @@ MAIN := ./main.c
 TEST := ./test.c
 
 EXE := ./bin/brainfuck
-ARGS := bf/test.bf
+ARGS := bf/hello.bf
 
 TESTEXE = ./bin/test
 

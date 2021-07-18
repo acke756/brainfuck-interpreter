@@ -34,6 +34,12 @@ int bf_interpret_file(FILE *f, const size_t mem_siz, char *const mem) {
             case '-':
                 (*ptr)--;
                 break;
+            case '.':
+                if (putchar(*ptr) == EOF) {
+                    return -1;
+                }
+
+                break;
         }
     }
 
