@@ -69,6 +69,15 @@ bool test_right_bracket(void) {
     return bf_interpret("bf/right_bracket.bf", 4, NULL) != 0;
 }
 
+bool test_lame_brackets(void) {
+    char mem_ref[4] = {1, -1, 0, 0};
+    char mem[4] = {0};
+
+    bf_interpret("bf/lame_brackets.bf", 4, mem);
+
+    return memcmp(mem, mem_ref, 4UL) == 0;
+}
+
 int main(int argc, char **argv) {
     test_t testv[] = {
         {test_sanity, "Sanity check"},
@@ -80,6 +89,7 @@ int main(int argc, char **argv) {
         {test_loop, "Loop"},
         {test_left_bracket, "Unmatched left bracket"},
         {test_right_bracket, "Unmatched right bracket"},
+        {test_lame_brackets, "Useless brackets"},
     };
     size_t testc = sizeof(testv) / sizeof(test_t);
 
