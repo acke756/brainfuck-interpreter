@@ -4,6 +4,10 @@
 
 #include "bf.h"
 
+#define RED "\033[31m"
+#define GRN "\033[32m"
+#define RST "\033[0m"
+
 typedef struct test {
     bool (*fun)(void);
     char *name;
@@ -82,10 +86,10 @@ int main(int argc, char **argv) {
     unsigned int fails = 0;
     for (test_t *test_p = testv; test_p != testv + testc; test_p++) {
         if (!((test_p->fun)())) {
-            printf("\033[31mFAILED\033[0m");
+            printf(RED "FAILED" RST);
             fails++;
         } else {
-            printf("\033[32mPASSED\033[0m");
+            printf(GRN "PASSED" RST);
         }
 
         printf(": %s\n", test_p->name);
@@ -94,9 +98,9 @@ int main(int argc, char **argv) {
     puts("");
 
     if (fails == 0) {
-        puts("\033[32mAll tests passed\033[0m");
+        puts(GRN "All tests passed" RST);
     } else {
-        printf("\033[31m%d test(s) failed!\033[0m\n", fails);
+        printf(RED "%d test(s) failed!\n" RST, fails);
     }
 
     return 0;
