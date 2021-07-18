@@ -1,5 +1,5 @@
 CC := gcc
-CF = -Wall -Werror -Iinclude -o $@ $^
+CF = -g -Wall -Werror -Iinclude -o $@ $^
 
 MC := valgrind --leak-check=full --show-leak-kinds=all
 
