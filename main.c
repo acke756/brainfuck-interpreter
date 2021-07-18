@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    if (bf_interpret(argv[1]) != 0) {
+    if (bf_interpret(argv[1], 30000) != 0) {
         perror("Error: ");
     }
 
