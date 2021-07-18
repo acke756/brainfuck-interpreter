@@ -13,11 +13,11 @@ bool test_sanity(void) {
 }
 
 bool test_leave_left(void) {
-    return bf_interpret("bf/leave_left.bf", 4) != 0;
+    return bf_interpret("bf/leave_left.bf", 4, NULL) != 0;
 }
 
 bool test_leave_right(void) {
-    return bf_interpret("bf/four_right.bf", 4) != 0;
+    return bf_interpret("bf/four_right.bf", 4, NULL) != 0;
 }
 
 int main(int argc, char **argv) {
