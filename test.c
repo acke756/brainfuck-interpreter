@@ -79,14 +79,24 @@ int main(int argc, char **argv) {
     };
     size_t testc = sizeof(testv) / sizeof(test_t);
 
+    unsigned int fails = 0;
     for (test_t *test_p = testv; test_p != testv + testc; test_p++) {
         if (!((test_p->fun)())) {
             printf("\033[31mFAILED\033[0m");
+            fails++;
         } else {
             printf("\033[32mPASSED\033[0m");
         }
 
         printf(": %s\n", test_p->name);
+    }
+
+    puts("");
+
+    if (fails == 0) {
+        puts("\033[32mAll tests passed\033[0m");
+    } else {
+        printf("\033[31m%d test(s) failed!\033[0m\n", fails);
     }
 
     return 0;
