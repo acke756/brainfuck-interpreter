@@ -8,6 +8,11 @@ typedef struct bf_context {
 } bf_context_t;
 
 int interpret(bf_context_t *context_p) {
+    long start_pos = ftell(context_p->f);
+    if (start_pos < 0) {
+        return -1;
+    }
+
     int in;
 
     for (int c = fgetc(context_p->f); c != EOF; c = fgetc(context_p->f)) {
@@ -56,12 +61,16 @@ int interpret(bf_context_t *context_p) {
 
                 break;
             case ']':
+                if (start_pos == 0) {
+                    return -1;
+                }
+
                 if (*(context_p->ptr) == 0) {
-                    //TODO: Pop a spot, or throw if stack is empty
+                    //TODO: Pop a spot
                     break;
                 }
 
-                //TODO: Return to spot at top of stack, or throw if stack is empty
+                //TODO: Return to spot at top of stack
                 break;
         }
     }
