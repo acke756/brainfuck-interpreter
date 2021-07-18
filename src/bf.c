@@ -99,6 +99,10 @@ int interpret(bf_context_t *context_p) {
         }
     }
 
+    if (start_pos != 0) {
+        return -1;
+    }
+
     return 0;
 }
 
