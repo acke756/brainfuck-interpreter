@@ -2,7 +2,7 @@
 
 #define MEM_SIZ 30000
 
-int bf_interpret(FILE *f) {
+int bf_interpret_file(FILE *f) {
     char mem[MEM_SIZ] = {0};
     char *ptr = mem;
 
@@ -26,4 +26,19 @@ int bf_interpret(FILE *f) {
     }
 
     return 0;
+}
+
+int bf_interpret(char *path) {
+    FILE *f = fopen(path, "r");
+    if (f == NULL) {
+        return -1;
+    }
+
+    int result = bf_interpret_file(f);
+
+    if (fclose(f) != 0) {
+        return -1;
+    }
+
+    return result;
 }
