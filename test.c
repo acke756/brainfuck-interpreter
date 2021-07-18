@@ -30,12 +30,22 @@ bool test_four_rising(void) {
     return memcmp(mem, mem_ref, 4UL) == 0;
 }
 
+bool test_four_falling(void) {
+    char mem_ref[] = {0, -1, -2, -3};
+    char mem[4] = {0};
+
+    bf_interpret("bf/four_falling.bf", 4, mem);
+
+    return memcmp(mem, mem_ref, 4UL) == 0;
+}
+
 int main(int argc, char **argv) {
     test_t testv[] = {
         {test_sanity, "Sanity check"},
         {test_leave_left, "Error when pointer exits left"},
         {test_leave_right, "Error when pointer exits right"},
         {test_four_rising, "Four rising numbers"},
+        {test_four_falling, "Four falling numbers"},
     };
     size_t testc = sizeof(testv) / sizeof(test_t);
 
