@@ -81,9 +81,9 @@ int main(int argc, char **argv) {
 
     for (test_t *test_p = testv; test_p != testv + testc; test_p++) {
         if (!((test_p->fun)())) {
-            printf("FAILED");
+            printf("\033[31mFAILED\033[0m");
         } else {
-            printf("PASSED");
+            printf("\033[32mPASSED\033[0m");
         }
 
         printf(": %s\n", test_p->name);
