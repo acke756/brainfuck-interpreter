@@ -24,12 +24,13 @@ int main(int argc, char **argv) {
     size_t testc = sizeof(testv) / sizeof(test_t);
 
     for (test_t *test_p = testv; test_p != testv + testc; test_p++) {
-        printf("%s: ", test_p->name);
         if (!((test_p->fun)())) {
-            puts("FAILED");
+            printf("FAILED");
         } else {
-            puts("PASSED");
+            printf("PASSED");
         }
+
+        printf(": %s\n", test_p->name);
     }
 
     return 0;
