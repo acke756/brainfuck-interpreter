@@ -1,12 +1,16 @@
 CC := gcc
 CF = -Wall -Werror -Iinclude -o $@ $^
 
+MC := valgrind --leak-check=full --show-leak-kinds=all
+
 SRCS := $(shell find src -path "*.c")
 OBJS := $(patsubst src/%.c,obj/%.o,$(SRCS))
 MAIN := ./main.c
 TEST := ./test.c
 
 EXE := ./bin/brainfuck
+ARGS := bf/test.bf
+
 TESTEXE = ./bin/test
 
 $(EXE): $(MAIN) $(OBJS)
@@ -18,13 +22,19 @@ $(TESTEXE): $(TEST) $(OBJS)
 obj/%.o: src/%.c
 	$(CC) -c $(CF)
 
-.PHONY: run clean test
+.PHONY: run clean test memcheck memtest
 
 test: $(TESTEXE)
-	$(TESTEXE)
+	$<
 
 run: $(EXE)
-	$< bf/test.bf
+	$< $(ARGS)
 
 clean:
 	rm $(EXE) $(TESTEXE) $(OBJS)
+
+memcheck: $(EXE)
+	$(MC) $< $(ARGS)
+
+memtest: $(TESTEXE)
+	$(MC) $<
