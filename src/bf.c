@@ -73,7 +73,10 @@ int interpret(bf_context_t *context_p) {
                     return 0;
                 }
 
-                //TODO: Return to spot at top of stack
+                if (fseek(context_p->f, start_pos, SEEK_SET) < 0) {
+                    return -1;
+                }
+
                 break;
         }
     }
