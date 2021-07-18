@@ -7,6 +7,21 @@ typedef struct bf_context {
     char *ptr;
 } bf_context_t;
 
+int skip_to_matching_rb(FILE *f) {
+    int c;
+    for (c = fgetc(f); c != EOF && c != ']'; c = fgetc(f)) {
+        if (c == '[') {
+            skip_to_matching_rb(f);
+        }
+    }
+
+    if (c == EOF) {
+        return -1;
+    }
+
+    return 0;
+}
+
 int interpret(bf_context_t *context_p) {
     long start_pos = ftell(context_p->f);
     if (start_pos < 0) {
@@ -61,7 +76,10 @@ int interpret(bf_context_t *context_p) {
                     break;
                 }
 
-                //TODO: skip to matching right bracket
+                int result = skip_to_matching_rb(context_p->f);
+                if (result != 0) {
+                    return result;
+                }
 
                 break;
             case ']':
