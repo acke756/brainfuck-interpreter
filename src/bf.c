@@ -6,7 +6,7 @@ int bf_interpret_file(FILE *f) {
     char mem[MEM_SIZ] = {0};
     char *ptr = mem;
 
-    for (int c; c != EOF; c = fgetc(f)) {
+    for (int c = fgetc(f); c != EOF; c = fgetc(f)) {
         switch (c) {
             case '>':
                 ptr++;
