@@ -7,6 +7,7 @@ int bf_interpret_file(FILE *f, const size_t mem_siz, char *const mem) {
     }
 
     char *ptr = mem;
+    int in;
 
     for (size_t i = 0; i < mem_siz; i++) {
         mem[i] = 0;
@@ -39,6 +40,14 @@ int bf_interpret_file(FILE *f, const size_t mem_siz, char *const mem) {
                     return -1;
                 }
 
+                break;
+            case ',':
+                in = getchar();
+                if (in == EOF) {
+                    return -1;
+                }
+
+                *ptr = (char) in;
                 break;
         }
     }
