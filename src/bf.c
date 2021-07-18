@@ -46,6 +46,23 @@ int interpret(bf_context_t *context_p) {
 
                 *(context_p->ptr) = (char) in;
                 break;
+            case '[':
+                if (*(context_p->ptr) != 0) {
+                    //TODO: Push this spot to stack
+                    break;
+                }
+
+                //TODO: skip to matching right bracket
+
+                break;
+            case ']':
+                if (*(context_p->ptr) == 0) {
+                    //TODO: Pop a spot, or throw if stack is empty
+                    break;
+                }
+
+                //TODO: Return to spot at top of stack, or throw if stack is empty
+                break;
         }
     }
 
