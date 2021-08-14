@@ -6,8 +6,12 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    if (bf_interpret(argv[1], 30000, NULL) != 0) {
-        perror("Error");
+    int result = bf_interpret(argv[1], 30000, NULL);
+    if (result > 0) {
+        printf("Error: %s\n", bf_strerror(result));
+        return -1;
+    } else if (result < 0) {
+        perror(bf_strerror(result));
         return -1;
     }
 

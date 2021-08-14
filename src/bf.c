@@ -1,5 +1,20 @@
 #include "bf.h"
 
+#define BF_SUCCESS 0
+#define BF_ERR_UNMATCHED_LB 1
+#define BF_ERR_UNMATCHED_RB 2
+#define BF_ERR_OOB_LEFT 3
+#define BF_ERR_OOB_RIGHT 4
+#define BF_ERRCOUNT 5
+
+#define BF_LIBERR_FTELL -1
+#define BF_LIBERR_FSEEK -2
+#define BF_LIBERR_PUTCHAR -3
+#define BF_LIBERR_GETCHAR -4
+#define BF_LIBERR_FOPEN -5
+#define BF_LIBERR_FCLOSE -6
+#define BF_LIBERRCOUNT -7
+
 typedef struct bf_context {
     FILE *f;
     const size_t mem_siz;
@@ -16,16 +31,16 @@ int skip_to_matching_rb(FILE *f) {
     }
 
     if (c == EOF) {
-        return -1;
+        return BF_ERR_UNMATCHED_LB;
     }
 
-    return 0;
+    return BF_SUCCESS;
 }
 
 int interpret(bf_context_t *context_p) {
     long start_pos = ftell(context_p->f);
     if (start_pos < 0) {
-        return -1;
+        return BF_LIBERR_FTELL;
     }
 
     int in;
@@ -35,14 +50,14 @@ int interpret(bf_context_t *context_p) {
             case '>':
                 (context_p->ptr)++;
                 if (context_p->ptr >= context_p->mem + context_p->mem_siz) {
-                    return -1;
+                    return BF_ERR_OOB_RIGHT;
                 }
 
                 break;
             case '<':
                 (context_p->ptr)--;
                 if (context_p->ptr < context_p->mem) {
-                    return -1;
+                    return BF_ERR_OOB_LEFT;
                 }
 
                 break;
@@ -54,14 +69,14 @@ int interpret(bf_context_t *context_p) {
                 break;
             case '.':
                 if (putchar(*(context_p->ptr)) == EOF) {
-                    return -1;
+                    return BF_LIBERR_PUTCHAR;
                 }
 
                 break;
             case ',':
                 in = getchar();
                 if (in == EOF) {
-                    return -1;
+                    return BF_LIBERR_GETCHAR;
                 }
 
                 *(context_p->ptr) = (char) in;
@@ -69,7 +84,7 @@ int interpret(bf_context_t *context_p) {
             case '[':
                 if (*(context_p->ptr) != 0) {
                     int result = interpret(context_p);
-                    if (result != 0) {
+                    if (result != BF_SUCCESS) {
                         return result;
                     }
 
@@ -77,22 +92,22 @@ int interpret(bf_context_t *context_p) {
                 }
 
                 int result = skip_to_matching_rb(context_p->f);
-                if (result != 0) {
+                if (result != BF_SUCCESS) {
                     return result;
                 }
 
                 break;
             case ']':
                 if (start_pos == 0) {
-                    return -1;
+                    return BF_ERR_UNMATCHED_RB;
                 }
 
                 if (*(context_p->ptr) == 0) {
-                    return 0;
+                    return BF_SUCCESS;
                 }
 
                 if (fseek(context_p->f, start_pos, SEEK_SET) < 0) {
-                    return -1;
+                    return BF_LIBERR_FSEEK;
                 }
 
                 break;
@@ -100,10 +115,10 @@ int interpret(bf_context_t *context_p) {
     }
 
     if (start_pos != 0) {
-        return -1;
+        return BF_ERR_UNMATCHED_LB;
     }
 
-    return 0;
+    return BF_SUCCESS;
 }
 
 int bf_interpret_file(FILE *f, const size_t mem_siz, char *const mem) {
@@ -131,14 +146,37 @@ int bf_interpret_file(FILE *f, const size_t mem_siz, char *const mem) {
 int bf_interpret(char *path, const size_t mem_siz, char *const mem) {
     FILE *f = fopen(path, "r");
     if (f == NULL) {
-        return -1;
+        return BF_LIBERR_FOPEN;
     }
 
     int result = bf_interpret_file(f, mem_siz, mem);
 
     if (fclose(f) != 0) {
-        return -1;
+        return BF_LIBERR_FCLOSE;
     }
 
     return result;
+}
+
+char const *bf_strerror(int err) {
+    static char const *errs[BF_ERRCOUNT];
+    errs[BF_SUCCESS] = "Success";
+    errs[BF_ERR_UNMATCHED_LB] = "Unmatched '['";
+    errs[BF_ERR_UNMATCHED_RB] = "Unmatched ']'";
+    errs[BF_ERR_OOB_LEFT] = "Pointer out of bounds, too far left";
+    errs[BF_ERR_OOB_RIGHT] = "Pointer out of bounds, too far right";
+
+    static char const *liberrs[-1-BF_LIBERRCOUNT];
+    liberrs[-1-BF_LIBERR_FTELL] = "ftell";
+    liberrs[-1-BF_LIBERR_FSEEK] = "fseek";
+    liberrs[-1-BF_LIBERR_PUTCHAR] = "putchar";
+    liberrs[-1-BF_LIBERR_GETCHAR] = "getchar";
+    liberrs[-1-BF_LIBERR_FOPEN] = "fopen";
+    liberrs[-1-BF_LIBERR_FCLOSE] = "fclose";
+
+    if (err < 0) {
+        return liberrs[-1-err];
+    }
+
+    return errs[err];
 }
