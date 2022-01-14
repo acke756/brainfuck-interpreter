@@ -1,5 +1,7 @@
 #include "bf.h"
 
+#include <errno.h>
+
 int main(int argc, char **argv) {
     if (argc != 2) {
         printf("Usage: %s filename\n", argv[0]);
@@ -10,7 +12,7 @@ int main(int argc, char **argv) {
     if (result > 0) {
         printf("Error: %s\n", bf_strerror(result));
         return -1;
-    } else if (result < 0) {
+    } else if (result < 0 && errno != 0) {
         perror(bf_strerror(result));
         return -1;
     }
